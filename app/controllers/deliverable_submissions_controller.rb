@@ -25,6 +25,11 @@ class DeliverableSubmissionsController < ApplicationController
     end
   end
 
+  def download
+    download = DeliverableSubmission.find(params[:id])
+    send_file "deliverable_submissions/#{download.id}/#{download.deliverable_file_name}", :type => download.deliverable_content_type
+  end
+
   # GET /deliverable_submissions/new
   # GET /deliverable_submissions/new.xml
   def new

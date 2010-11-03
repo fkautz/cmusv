@@ -12,7 +12,7 @@ class DeliverableSubmission < ActiveRecord::Base
   has_attached_file :deliverable,
                     :storage => :filesystem,
                     :url => "/deliverable_submissions/:id/:filename",
-                    :path => ":rails_root/public/deliverable_submissions/:id/:filename"
+                    :path => ":rails_root/deliverable_submissions/:id/:filename"
 
   validates_attachment_presence :deliverable
 end
