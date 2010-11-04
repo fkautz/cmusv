@@ -27,7 +27,15 @@ class DeliverableSubmissionsController < ApplicationController
 
   def download
     download = DeliverableSubmission.find(params[:id])
-    send_file "deliverable_submissions/#{download.id}/#{download.deliverable_file_name}", :type => download.deliverable_content_type
+    if is_allowed(current_user.id, download.id)
+      send_file "deliverable_submissions/#{download.id}/#{download.deliverable_file_name}", :type => download.deliverable_content_type
+    else
+      redirect_to :controller => :deliverable_submissions, :view => :index
+    end
+  end
+
+  def is_allowed(a, b)
+    #TODO fkautz or nvibhor - determine if we are allowed to download this submission
   end
 
   # GET /deliverable_submissions/new
