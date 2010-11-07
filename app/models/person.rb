@@ -191,6 +191,30 @@ class Person < ActiveRecord::Base
      return true
    end
 
+	 def Person.full_search(query)
+		 if(query.nil? || query.chomp.empty?)
+			 return Person.find(:all)
+		 end
+		 queries = query.split(" ")
+		 queries = queries.map {|q| q.chomp}
+		 results = []
+		 queries.each do |q|
+			 results << Person.find(:all, :conditions => ['organization_name LIKE ?', "%#{q}%"])
+			 results << Person.find(:all, :conditions => ['first_name LIKE ?', "%#{q}%"])
+			 results << Person.find(:all, :conditions => ['last_name LIKE ?', "%#{q}%"])
+			 # appears that mysql doesn't support ilike
+#			 results << Person.find(:all, :conditions => ['organization_name ILIKE ?', "%#{q}%"])
+		 end
+
+		 results = results.flatten
+		 results = results.uniq
+		 puts "### RESULTS ###"
+		 results.map {|r| puts r.human_name}
+		 return nil if results.empty?
+		 results
+	 end
+
+#	 people = Person.find(:all, :conditions => ['is_active = ?', true],  :order => "first_name ASC, last_name ASC")
 
 #   def create_adobe_connect
 #     require 'mechanize'

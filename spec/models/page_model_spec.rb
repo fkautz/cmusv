@@ -5,7 +5,7 @@ describe PagesController do
 
 
   before(:all) do
-      activate_authlogic
+    activate_authlogic
   end
 
   before(:each) do

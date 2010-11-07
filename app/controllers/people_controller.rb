@@ -14,11 +14,12 @@ class PeopleController < ApplicationController
   # GET /people.xml
   def index
     if params[:search]
-      if development?
-        @people = Person.find(:all, :conditions => ['human_name LIKE ?', "%#{params[:search]}%"])
-      else
-        @people = Person.find(:all, :conditions => ['human_name ILIKE ?', "%#{params[:search]}%"])
-      end
+      @people = Person.full_search(params[:search])
+#      if development?
+#        @people = Person.find(:all, :conditions => ['human_name LIKE ?', "%#{params[:search]}%"])
+#      else
+#        @people = Person.find(:all, :conditions => ['human_name ILIKE ?', "%#{params[:search]}%"])
+#      end
     else
           @people = Person.find(:all, :conditions => ['is_active = ?', true],  :order => "first_name ASC, last_name ASC")
     end
