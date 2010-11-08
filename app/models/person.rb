@@ -77,7 +77,7 @@ class Person < ActiveRecord::Base
     return s_teams
   end
 
-   def get_registered_courses
+  def get_registered_courses
     semester = ApplicationController.current_semester()
 
     @sql_str = "select c.* FROM courses c,teams t
@@ -191,30 +191,28 @@ class Person < ActiveRecord::Base
      return true
    end
 
-	 def Person.full_search(query)
-		 if(query.nil? || query.chomp.empty?)
-			 return Person.find(:all)
-		 end
-		 queries = query.split(" ")
-		 queries = queries.map {|q| q.chomp}
-		 results = []
-		 queries.each do |q|
-			 results << Person.find(:all, :conditions => ['organization_name LIKE ?', "%#{q}%"])
-			 results << Person.find(:all, :conditions => ['first_name LIKE ?', "%#{q}%"])
-			 results << Person.find(:all, :conditions => ['last_name LIKE ?', "%#{q}%"])
-			 # appears that mysql doesn't support ilike
-#			 results << Person.find(:all, :conditions => ['organization_name ILIKE ?', "%#{q}%"])
-		 end
-
-		 results = results.flatten
-		 results = results.uniq
-		 puts "### RESULTS ###"
-		 results.map {|r| puts r.human_name}
-		 return nil if results.empty?
-		 results
-	 end
-
-#	 people = Person.find(:all, :conditions => ['is_active = ?', true],  :order => "first_name ASC, last_name ASC")
+  def Person.full_search(query)
+    if(query.nil? || query.chomp.empty?)
+      return Person.find(:all)
+    end
+    queries = query.split(" ")
+    queries = queries.map {|q| q.chomp}
+    results = []
+    queries.each do |q|
+      results << Person.find(:all, :conditions => ['organization_name LIKE ?', "%#{q}%"])
+      results << Person.find(:all, :conditions => ['first_name LIKE ?', "%#{q}%"])
+      results << Person.find(:all, :conditions => ['work_city LIKE ?', "%#{q}%"])
+      results << Person.find(:all, :conditions => ['work_state LIKE ?', "%#{q}%"])
+      results << Person.find(:all, :conditions => ['work_country LIKE ?', "%#{q}%"])
+      # appears that mysql doesn't support ilike
+      #      results << Person.find(:all, :conditions => ['organization_name ILIKE ?', "%#{q}%"])
+    end
+    
+    results = results.flatten
+    results = results.uniq
+    return nil if results.empty?
+    results
+  end
 
 #   def create_adobe_connect
 #     require 'mechanize'
@@ -234,3 +232,4 @@ class Person < ActiveRecord::Base
 #   end
 
 end
+

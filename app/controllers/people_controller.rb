@@ -24,7 +24,26 @@ class PeopleController < ApplicationController
           @people = Person.find(:all, :conditions => ['is_active = ?', true],  :order => "first_name ASC, last_name ASC")
     end
 
-    
+    if params[:proximity]
+      @people = @people.find_all {|p| p.local_near_remote == params[:proximity].chomp}
+    end
+
+    if params[:graduating_soon]
+      @people = @people.find_all {|p| p.graduation_year == Time.now.year.to_s}
+    end
+
+    if params[:blank_email]
+      q1 = @people.find_all {|p| p.email == '@sv.cmu.edu'}
+      q2 = @people.find_all {|p| p.email == ''}
+      q3 = @people.find_all {|p| p.email.nil?}
+      @people = q1 + q2 + q3
+    end
+
+    if params[:no_tigris]
+      q1 = @people.find_all {|p| p.tigris.nil?}
+      q2 = @people.find_all {|p| p.tigris == ''}
+      @people = q1 + q2
+    end
 #    respond_to do |format|
 ##      format.html # index.html.erb
 #      format.html { render :html => @people, :layout => "cmu_sv" } # index.html.erb
